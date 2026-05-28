@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Automotive Tolerance Simulation Portal</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+display:flex;
+height:100vh;
+overflow:hidden;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:280px;
+background:#111827;
+padding:30px 20px;
+border-right:1px solid rgba(255,255,255,0.08);
+display:flex;
+flex-direction:column;
+}
+
+.logo{
+font-size:24px;
+font-weight:700;
+margin-bottom:40px;
+color:#38bdf8;
+}
+
+.menu{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.menu button{
+background:#1e293b;
+border:none;
+padding:18px;
+border-radius:14px;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+text-align:left;
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.menu button:hover{
+background:#334155;
+transform:translateY(-2px);
+}
+
+.menu button.active{
+background:#0284c7;
+}
+
+/* MAIN CONTENT */
+
+.main{
+flex:1;
+padding:35px;
+overflow-y:auto;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.topbar h1{
+font-size:30px;
+font-weight:700;
+}
+
+.status{
+background:#1e293b;
+padding:10px 16px;
+border-radius:12px;
+font-size:14px;
+}
+
+/* CARD */
+
+.card{
+background:#111827;
+border:1px solid rgba(255,255,255,0.06);
+border-radius:24px;
+padding:30px;
+box-shadow:0 10px 40px rgba(0,0,0,0.3);
+}
+
+/* FORM GRID */
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:24px;
+margin-top:25px;
+}
+
+.field{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.field label{
+font-size:14px;
+font-weight:500;
+color:#cbd5e1;
+}
+
+.field input,
+.field textarea,
+.field select{
+background:#1e293b;
+border:1px solid #334155;
+padding:14px;
+border-radius:12px;
+color:white;
+font-size:14px;
+outline:none;
+transition:0.3s;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+border-color:#38bdf8;
+box-shadow:0 0 0 3px rgba(56,189,248,0.2);
+}
+
+textarea{
+min-height:120px;
+resize:vertical;
+}
+
+/* BUTTON */
+
+.submit-btn{
+margin-top:30px;
+background:linear-gradient(135deg,#0284c7,#38bdf8);
+border:none;
+padding:18px 28px;
+border-radius:14px;
+font-size:16px;
+font-weight:600;
+color:white;
+cursor:pointer;
+transition:0.3s;
+}
+
+.submit-btn:hover{
+transform:translateY(-3px);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+body{
+flex-direction:column;
+height:auto;
+}
+
+.sidebar{
+width:100%;
+border-right:none;
+border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.form-grid{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<div class="logo">
+<i class="fa-solid fa-car"></i>
+ AutoTol Portal
+</div>
+
+<div class="menu">
+
+<button class="menu-btn active"
+onclick="showForm('internal', this)">
+<i class="fa-solid fa-layer-group"></i>
+Internal Tolerance
+</button>
+
+<button class="menu-btn"
+onclick="showForm('outer', this)">
+<i class="fa-solid fa-cube"></i>
+Outer Geometry Analysis
+</button>
+
+<button class="menu-btn"
+onclick="showForm('mechanical', this)">
+<i class="fa-solid fa-gears"></i>
+Mechanical Stack-Up
+</button>
+
+</div>
+
+</div>
+
+<div class="main">
+
+<div class="topbar">
+<h1 id="pageTitle">Internal Tolerance Request</h1>
+
+<div class="status">
+Engineering Simulation Portal
+</div>
+</div>
+
+<div class="card">
+
+<form id="dynamicForm">
+
+<div class="form-grid">
+
+<div class="field">
+<label>Light Function</label>
+<input type="text" placeholder="Enter light function"/>
+</div>
+
+<div class="field">
+<label>LED Type</label>
+<input type="text" placeholder="Enter LED type"/>
+</div>
+
+<div class="field">
+<label>Concept Review for FDD</label>
+<select>
+<option>Select</option>
+<option>Completed</option>
+<option>Pending</option>
+</select>
+</div>
+
+<div class="field">
+<label>Location & Fixation Concept</label>
+<input type="text"
+placeholder="Assembly sequence PPT"/>
+</div>
+
+<div class="field">
+<label>Tolerance Group</label>
+<input type="text"
+placeholder="Tolerance group"/>
+</div>
+
+<div class="field">
+<label>CAD Data</label>
+<input type="text"
+placeholder="DIS # or Sharepoint link"/>
+</div>
+
+<div class="field">
+<label>2D Drawings</label>
+<input type="file"/>
+</div>
+
+<div class="field">
+<label>Plastic Components</label>
+<input type="file"/>
+</div>
+
+<div class="field">
+<label>PCB</label>
+<input type="file"/>
+</div>
+
+<div class="field">
+<label>Cpk for Single Part</label>
+<input type="text"
+placeholder="Enter Cpk"/>
+</div>
+
+<div class="field">
+<label>Moldflow STL File</label>
+<input type="file"/>
+</div>
+
+<div class="field">
+<label>Expected Input Date</label>
+<input type="date"/>
+</div>
+
+<div class="field">
+<label>Expected Output CW</label>
+<input type="text"
+placeholder="Enter CW"/>
+</div>
+
+<div class="field" style="grid-column:1/-1;">
+<label>Additional Remarks</label>
+<textarea placeholder="Additional remarks..."></textarea>
+</div>
+
+</div>
+
+<button class="submit-btn">
+Submit Simulation Request
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+<script>
+
+function showForm(type, element){
+
+document.querySelectorAll('.menu-btn')
+.forEach(btn => btn.classList.remove('active'));
+
+element.classList.add('active');
+
+const title = document.getElementById('pageTitle');
+
+const form = document.getElementById('dynamicForm');
+
+if(type === 'internal'){
+
+title.innerText = 'Internal Tolerance Request';
+
+form.innerHTML = internalForm();
+
+}
+
+else if(type === 'outer'){
+
+title.innerText = 'Outer Geometry Analysis';
+
+form.innerHTML = outerForm();
+
+}
+
+else{
+
+title.innerText = 'Mechanical Stack-Up';
+
+form.innerHTML = mechanicalForm();
+
+}
+
+}
+
+function internalForm(){
+
+return `
+
+<div class="form-grid">
+
+<div class="field">
+<label>Light Function</label>
+<input type="text"/>
+</div>
+
+<div class="field">
+<label>LED Type</label>
+<input type="text"/>
+</div>
+
+<div class="field">
+<label>Concept Review FDD</label>
+<select>
+<option>Completed</option>
+<option>Pending</option>
+</select>
+</div>
+
+<div class="field">
+<label>CAD Data</label>
+<input type="text"/>
+</div>
+
+<div class="field">
+<label>2D Drawings</label>
+<input type="file"/>
+</div>
+
+<div class="field">
+<label>PCB</label>
+<input type="file"/>
+</div>
+
+<div class="field" style="grid-column:1/-1;">
+<label>Additional Remarks</label>
+<textarea></textarea>
+</div>
+
+</div>
+
+<button class="submit-btn">
+Submit Internal Tolerance
+</button>
+
+`;
+
+}
+
+function outerForm(){
+
+return `
+
+<div class="form-grid">
+
+<div class="field">
+<label>Outer Lens Geometry</label>
+<input type="text"/>
+</div>
+
+<div class="field">
+<label>Surface Analysis</label>
+<input type="text"/>
+</div>
+
+<div class="field">
+<label>Gap & Flush Target</label>
+<input type="text"/>
+</div>
+
+<div class="field">
+<label>CAD Link</label>
+<input type="text"/>
+</div>
+
+<div class="field">
+<label>Expected Output</label>
+<input type="date"/>
+</div>
+
+<div class="field" style="grid-column:1/-1;">
+<label>Remarks</label>
+<textarea></textarea>
+</div>
+
+</div>
+
+<button class="submit-btn">
+Submit Geometry Analysis
+</button>
+
+`;
+
+}
+
+function mechanicalForm(){
+
+return `
+
+<div class="form-grid">
+
+<div class="field">
+<label>Assembly Components</label>
+<input type="text"/>
+</div>
+
+<div class="field">
+<label>Fixation Method</label>
+<input type="text"/>
+</div>
+
+<div class="field">
+<label>Stack-Up Direction</label>
+<input type="text"/>
+</div>
+
+<div class="field">
+<label>Critical Dimension</label>
+<input type="text"/>
+</div>
+
+<div class="field">
+<label>Tolerance Report</label>
+<input type="file"/>
+</div>
+
+<div class="field">
+<label>Expected CW</label>
+<input type="text"/>
+</div>
+
+<div class="field" style="grid-column:1/-1;">
+<label>Engineering Notes</label>
+<textarea></textarea>
+</div>
+
+</div>
+
+<button class="submit-btn">
+Submit Stack-Up Request
+</button>
+
+`;
+
+}
+
+</script>
+
+</body>
+</html>
